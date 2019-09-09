@@ -4,7 +4,6 @@
 
 import pandas as pd
 import numpy as np
-import random as rand
 
 #Preprocessor that determines a percentage of how party members voted on issues.
 #Then it randomly picks from weighted options to provide a more appropriate vote.
@@ -14,31 +13,21 @@ def weightedPreprocessor(input_file):
     data = pd.read_csv(input_file,header=None,names=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16'])
     republican_data = data.loc[(data['0'] == 'republican')]
     democrat_data = data.loc[(data['0'] == 'democrat')]
-    republican_vote_filler = []
     rep_percentages_list = []
     rep_non_weighted_list_of_lists = []
 
-    democrat_vote_filler = []
     dem_percentages_list = []
     dem_non_weighted_list_of_lists = []
 
     for column in republican_data:
         rep_percentages = republican_data[column].value_counts(normalize=True).tolist()
         rep_non_weighted_list = republican_data[column].value_counts().index.tolist()
-        rep_random_vote = np.random.choice(rep_non_weighted_list,p=rep_percentages)
-        while(rep_random_vote == '?'):
-            rep_random_vote = np.random.choice(rep_non_weighted_list,p=rep_percentages)
-        republican_vote_filler.append(rep_random_vote)
         rep_percentages_list.append(rep_percentages)
         rep_non_weighted_list_of_lists.append(rep_non_weighted_list)
 
     for column in democrat_data:
         dem_percentages = democrat_data[column].value_counts(normalize=True).tolist()
         dem_non_weighted_list = democrat_data[column].value_counts().index.tolist()
-        dem_random_vote = np.random.choice(dem_non_weighted_list,p=dem_percentages)
-        while(dem_random_vote == '?'):
-            dem_random_vote = np.random.choice(dem_non_weighted_list,p=dem_percentages)
-        democrat_vote_filler.append(dem_random_vote)
         dem_percentages_list.append(dem_percentages)
         dem_non_weighted_list_of_lists.append(dem_non_weighted_list)
 
