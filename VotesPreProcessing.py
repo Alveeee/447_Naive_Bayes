@@ -67,12 +67,23 @@ def weightedPreprocessor(input_file):
         #from original dataframe the same)
         final_data = final_data.append(temp_data,ignore_index=True)
         j+=1
+
+    #Get the first row (republicans and democrats)
+    temp = final_data.iloc[0]
+    #Remove the first row
+    final_data.drop([0], inplace=True)
+    #insert temp at the bottom
+    final_data.loc[len(final_data)]=temp
+
+    
     #Flips rows and columns so that the frame is identical except to the
     #original except with no missing values
     final_data = final_data.transpose()
     #Change to binary for easier algorithm work
     final_data = final_data.replace('y','1')
     final_data = final_data.replace('n','0')
+    final_data = final_data.replace('republican','1')
+    final_data = final_data.replace('democrat','0')
     final_data.to_csv('votes_processed.csv',header=False,index=False)
 
 weightedPreprocessor("house-votes-84.data.csv")
