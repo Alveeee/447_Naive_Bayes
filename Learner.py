@@ -177,6 +177,30 @@ def print_probability(probability_table):
             total += value
         print(str(total) + '\n')
 
+#First of the loss functions. MSE is a great way to measure quality,
+#however it is harsh on data points that are farther away from zero because
+#of the square.
+def find_MSE(pred,act):
+    total = 0
+    size = len(act)
+    for i in range(0,size):
+        dif_squared = (pred[i] - act[i])**2
+        total += dif_squared
+    MSE = total/size
+    print("Mean Square Error = :",MSE)
+
+#Second loss function MAE is the same as MSE except it has absolute values
+#and no squaring of the diffence between the estimated values and the actual
+#values
+def find_MAE(pred,act):
+    total = 0
+    size = len(act)
+    for i in range(0,size):
+        abs_dif = abs(pred[i] - act[i])
+        total += abs_dif
+    MAE = total/size
+    print("Mean Absolute Error = :",MAE)
+
 def driver(file):
     #reading in data from file
     data = readCsv(file)
@@ -185,7 +209,8 @@ def driver(file):
     splitRatio = .9
     kfold = 10
     result = []
-
+    y = []
+    y_bar = []
     for i in range(kfold):
         classes = getClasses(data)
         
@@ -196,11 +221,18 @@ def driver(file):
         correct = 0
         for example in testSet:
             prediction = classes[classify_example(example, learned)]
+            y.append(prediction)
+            y_bar.append(example[len(example)-1])
             if(example[len(example)-1] == prediction):
                 correct += 1
 
         result.append(correct/len(testSet))
 
+    #Find Mean Square Error
+    find_MSE(y,y_bar)
+    #Find Mean Absolute Error
+    find_MAE(y,y_bar)
+    
     #sum all 10 results to get an average acuracy
     add = 0
     for x in range(len(result)):
