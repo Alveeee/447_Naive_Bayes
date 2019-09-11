@@ -137,14 +137,9 @@ def classify_example(example, learned_set):
         for a in range(len(example)-1):
 
             #add the probability from example's attribute value
-            #TODO figure out a better way to do this without indexing based on value
             x = int(example[a])-1
             if(len(learned_set[c][a]) > x):
                 C[c] += learned_set[c][a][x]
-
-        #multiply sum by sample's class size
-        #C[c] *= int(learned_set[c][-1][0]) / sample_size
-        #print("Total for class " + str(c) + ": " + str(C[c]))
 
     #find highest value in C[] as prediction
     high = 0
