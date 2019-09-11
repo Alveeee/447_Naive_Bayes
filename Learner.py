@@ -199,7 +199,7 @@ def find_MAE(pred,act):
     print("Mean Absolute Error = :",MAE)
 
 
-#STILL AN OUT OF BOUND ERROR
+#TODO: STILL AN OUT OF BOUND ERROR
 def jumble(file):
     data =  pandas.read_csv(file,header=None)
     size = len(data.columns)
@@ -264,10 +264,15 @@ def driver(file):
     print("This algorithm was %{0:.2f} accurate on {1}".format(average,file))
 
 driver("data/BCD-processed.csv")
+driver("data/BCD-processed_jumbled.csv")
 driver("data/votes_processed.csv")
+driver("data/votes_processed_jumbled.csv")
 driver("data/soybean-processed.csv")
+driver("data/soybean-processed_jumbled.csv")
 driver("data/iris-processed.csv")
+driver("data/iris-processed_jumbled.csv")
 driver("data/glass-processed.csv")
+driver("data/glass-processed_jumbled.csv")
 
 
 ##BCD_identities = [2,4]
