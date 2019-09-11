@@ -243,12 +243,10 @@ def driver(file):
 
 driver("data/BCD-processed.csv")
 driver("data/votes_processed.csv")
+driver("data/votes_processed_jumbled.csv")
 driver("data/soybean-processed.csv")
 driver("data/iris-processed.csv")
 driver("data/glass-processed.csv")
-
-
-
 
 
 ##BCD_identities = [2,4]

@@ -4,6 +4,7 @@
 
 import pandas as pd
 import numpy as np
+import random as rand
 
 #Preprocessor that determines a percentage of how party members voted on issues.
 #Then it randomly picks from weighted options to provide a more appropriate vote.
@@ -85,5 +86,26 @@ def weightedPreprocessor(input_file):
     final_data = final_data.replace('republican','1')
     final_data = final_data.replace('democrat','0')
     final_data.to_csv('../data/votes_processed.csv',header=False,index=False)
+
+    
+    size = len(final_data.columns)
+    #Uniquely sample numbers in the range of the number of columns in our
+    #dataframe. Only selects 10% of numbers
+    random_list = rand.sample(list(range(size)),int(size/10))
+
+    
+    randomized_features = final_data
+    #Gets the columns at the randomly selected spots
+    random_set = randomized_features.loc[:,random_list]
+    #Creates a new dataframe with these columns dropped
+    with_drop = randomized_features.drop(random_set,axis=1)
+    #Shuffles the entire column
+    random_set = random_set.sample(frac=1)
+    #Resets index so that the change actually takes place
+    random_set.reset_index(inplace=True, drop=True)
+    #Inserts shuffled column(s) back into place
+    for l in random_list:
+        with_drop.insert(l-1,l,random_set[l])
+    with_drop.to_csv('../data/votes_processed_jumbled.csv',header=False,index=False)
 
 weightedPreprocessor("../data/house-votes-84.data.csv")
