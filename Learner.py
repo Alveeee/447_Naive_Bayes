@@ -104,11 +104,13 @@ def find_attribute_probability(class_data, numValues):
 
     #iterate through each example
     for c in range(len(class_data)):
-
         #iterate through each attribute
         for a in range(numAttributes - 1):
             #increment count for attribute's matching value
-            table[a][int(class_data[c][a])-1] += 1
+            #TODO figure out a better way to do this without indexing based on value
+            x = int(class_data[c][a])-1
+            if(len(table[a]) > x):
+                table[a][x] += 1
 
     #divide the number of examples matching each value by the number of examples in the class
     for attribute in table:
@@ -135,7 +137,10 @@ def classify_example(example, learned_set):
         for a in range(len(example)-1):
 
             #add the probability from example's attribute value
-            C[c] += learned_set[c][a][int(example[a])-1]
+            #TODO figure out a better way to do this without indexing based on value
+            x = int(example[a])-1
+            if(len(learned_set[c][a]) > x):
+                C[c] += learned_set[c][a][x]
 
         #multiply sum by sample's class size
         #C[c] *= int(learned_set[c][-1][0]) / sample_size
@@ -172,37 +177,47 @@ def print_probability(probability_table):
             total += value
         print(str(total) + '\n')
 
+def driver(file):
+    #reading in data from file
+    data = readCsv(file)
+    data = randomizeData(data)
 
-#reading in data from file
-file = "data/BCD-processed.csv"
-data = readCsv(file)
-data = randomizeData(data)
+    splitRatio = .9
+    kfold = 10
+    result = []
 
-splitRatio = .9
-kfold = 10
-result = []
+    for i in range(kfold):
+        classes = getClasses(data)
+        
+        trainingSet, testSet = kFoldCross(data, splitRatio, i)
 
-for i in range(kfold):
-    classes = getClasses(data)
-    
-    trainingSet, testSet = kFoldCross(data, splitRatio, i)
+        learned = learn_dataset(trainingSet,classes,len(trainingSet[0]))
 
-    learned = learn_dataset(trainingSet,classes,len(trainingSet[0]))
+        correct = 0
+        for example in testSet:
+            prediction = classes[classify_example(example, learned)]
+            if(example[len(example)-1] == prediction):
+                correct += 1
 
-    correct = 0
-    for example in testSet:
-        prediction = classes[classify_example(example, learned)]
-        if(example[len(example)-1] == prediction):
-            correct += 1
+        result.append(correct/len(testSet))
 
-    result.append(correct/len(testSet))
+    #sum all 10 results to get an average acuracy
+    add = 0
+    for x in range(len(result)):
+        add = add + result[x]
+    average = (add/len(result))*100
 
-#sum all 10 results to get an average acuracy
-add = 0
-for x in range(len(result)):
-    add = add + result[x]
-average = (add/len(result))*100
-print("This algorithm was {0:.2f}% accurate".format(average))
+    print("This algorithm was %{0:.2f} accurate on {1}".format(average,file))
+
+driver("data/BCD-processed.csv")
+driver("data/votes_processed.csv")
+driver("data/soybean-processed.csv")
+driver("data/iris-processed.csv")
+driver("data/glass-processed.csv")
+
+
+
+
 
 ##BCD_identities = [2,4]
 ##BCD_examples = ["2,1,1,1,2,1,2,1,1,2".split(","),"10,10,10,4,8,1,8,10,1,4".split(","),"1,1,1,1,2,1,3,2,1,2".split(","),"5,1,3,1,2,1,2,1,1,2".split(",")]

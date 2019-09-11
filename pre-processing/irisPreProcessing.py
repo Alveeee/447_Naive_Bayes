@@ -5,9 +5,12 @@
 
 import csv
 
+#reads in a csv file
 def readCsv(file):
     lines = csv.reader(open(file, "r"))
     data = list(lines)
+
+    #loops through the file data to process
     for i in range(len(data)):
         for j in range(len(data[i])):
             if(data[i][j] == 'Iris-setosa'):
@@ -16,9 +19,10 @@ def readCsv(file):
                 data[i][j] = '2'
             elif(data[i][j] == 'Iris-virginica'):
                 data[i][j] = '3'
-        data[i] = [float(x) for x in data[i]]
+            data[i][j] = int(1.0*round(float(data[i][j]),3))
     return data
 
+#writes to a file
 def writeCsv(file, data):
     with open(file, mode='w') as out:
         writer = csv.writer(out, delimiter=',')
@@ -30,7 +34,7 @@ def main():
     print("Iris Data Pre-Processing")
     # Read CSV file
     in_file = "../data/iris.data.csv"
-    out_file = "../data/iris-preprocessed.csv"
+    out_file = "../data/iris-processed.csv"
     data = readCsv(in_file)
     print("Data has been read from the file {0} and pre-processed".format(in_file))
 

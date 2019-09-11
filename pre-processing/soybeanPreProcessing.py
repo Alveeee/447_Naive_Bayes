@@ -32,7 +32,7 @@ def main():
     print("Soybean-Small Data Pre-Processing")
     # Read CSV file
     in_file = "../data/soybean-small.data.csv"
-    out_file = "../data/soybean-preprocessed.csv"
+    out_file = "../data/soybean-processed.csv"
     data = readCsv(in_file)
     print("Data has been read from the file {0} and pre-processed".format(in_file))
     

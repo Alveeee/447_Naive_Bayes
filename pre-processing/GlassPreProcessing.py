@@ -10,7 +10,7 @@ def readCsv(file):
         #for loop for each element within a row
         for j in range(len(data[i])):
             #This both rounds each point to the nearest 3rd decemal place, then drops the decimal point for easier categorization
-            data[i][j] = int(1000.0*round(float(data[i][j]),3))
+            data[i][j] = int(1.0*round(float(data[i][j]),3))
     return data
 
 #function to write data to a CSV File
