@@ -9,7 +9,8 @@ def readCsv(file):
     for i in range(len(data)):
         #for loop for each element within a row
         for j in range(len(data[i])):
-            data[i][j] = round(float(data[i][j]), 3)
+            #This both rounds each point to the nearest 3rd decemal place, then drops the decimal point for easier categorization
+            data[i][j] = int(1000.0*round(float(data[i][j]),3))
     return data
 
 #function to write data to a CSV File
@@ -23,7 +24,7 @@ def writeCsv(file, data):
 def main():
     #Read CSV file
     iFile = "../data/glass.data.csv"
-    oFile = "../data/glass-preprocessed.csv"
+    oFile = "../data/glass-processed.csv"
     #collect data from CSV
     data = readCsv(iFile)
     #Writes data to CSV
