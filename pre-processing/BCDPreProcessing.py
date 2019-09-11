@@ -26,4 +26,4 @@ def processBCD(input_name, output_name):
                         writeOut.write(",")
                 
 
-processBCD("BCD.data","BCD-processed.txt")
+processBCD("../data/breast-cancer-wisconsin.data","../data/BCD-processed.csv")

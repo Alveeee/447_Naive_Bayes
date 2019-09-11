@@ -84,6 +84,6 @@ def weightedPreprocessor(input_file):
     final_data = final_data.replace('n','0')
     final_data = final_data.replace('republican','1')
     final_data = final_data.replace('democrat','0')
-    final_data.to_csv('votes_processed.csv',header=False,index=False)
+    final_data.to_csv('../data/votes_processed.csv',header=False,index=False)
 
-weightedPreprocessor("house-votes-84.data.csv")
+weightedPreprocessor("../data/house-votes-84.data.csv")
