@@ -1,5 +1,7 @@
 import csv
 import random
+import pandas
+import os
 
 #readCsv reads in the preprocessed data
 def readCsv(file):
@@ -196,9 +198,34 @@ def find_MAE(pred,act):
     MAE = total/size
     print("Mean Absolute Error = :",MAE)
 
+
+#STILL AN OUT OF BOUND ERROR
+def jumble(file):
+    data =  pandas.read_csv(file,header=None)
+    size = len(data.columns)
+    #Uniquely sample numbers in the range of the number of columns in our
+    #dataframe. Only selects 10% of numbers
+    random_list = random.sample(list(range(size)),int(size/10))
+
+    randomized_features = data
+    #Gets the columns at the randomly selected spots
+    random_set = randomized_features.loc[:,random_list]
+    #Creates a new dataframe with these columns dropped
+    with_drop = randomized_features.drop(random_set,axis=1)
+    #Shuffles the entire column
+    random_set = random_set.sample(frac=1)
+    #Resets index so that the change actually takes place
+    random_set.reset_index(inplace=True, drop=True)
+    #Inserts shuffled column(s) back into place
+    for l in random_list:
+        with_drop.insert(l,l,random_set[l])
+    temp = os.path.splitext(file)[0]
+    with_drop.to_csv(temp+'_jumbled.csv',header=False,index=False)
+
 def driver(file):
     #reading in data from file
     data = readCsv(file)
+    jumble(file)
     data = randomizeData(data)
 
     splitRatio = .9
@@ -238,7 +265,6 @@ def driver(file):
 
 driver("data/BCD-processed.csv")
 driver("data/votes_processed.csv")
-driver("data/votes_processed_jumbled.csv")
 driver("data/soybean-processed.csv")
 driver("data/iris-processed.csv")
 driver("data/glass-processed.csv")
