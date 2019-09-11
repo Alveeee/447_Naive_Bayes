@@ -38,8 +38,6 @@ def kFoldCross(data, splitRatio, k):
     for i in range(testSize):
         testSet.append(trainSet.pop(index))
     
-    print('Found Training Set\nFound Test Set')
-    
     return [trainSet, testSet]
 
 import csv
@@ -82,8 +80,6 @@ def kFoldCross(data, splitRatio, k):
     for i in range(testSize):
         testSet.append(trainSet.pop(index))
     
-    print('Found Training Set\nFound Test Set')
-    
     return [trainSet, testSet]
 
 #returns class-specific dataset(from given dataset) for given class [Q(C = c_i)]
@@ -96,26 +92,6 @@ def get_class_data(data, c):
         #if the class matches the requested identity, add to class-specific dataset
         if line[-1] == c:
             class_data.append(line)
-    print(class_data)
-    return class_data
-
-#returns class-specific dataset(from given dataset) for given class [Q(C = c_i)]
-def get_class_data_old(dataset_name, class_identity):
-
-    #array for storing class-specific dataset
-    class_data = []
-
-    #open original dataset
-    with open("data/" + dataset_name) as dataset:
-
-        #read data
-        for line in dataset:
-            features = line.split(",")
-
-            #if the class matches the requested identity, add to class-specific dataset
-            if features[-1] == str(class_identity) + "\n":
-                class_data.append(features)
-    print(class_data)
     return class_data
 
 #returns the probability of each value of each attribute in a class-uniform dataset [F(A_j = a_k, C = c_i)]
@@ -163,7 +139,7 @@ def classify_example(example, learned_set):
 
         #multiply sum by sample's class size
         #C[c] *= int(learned_set[c][-1][0]) / sample_size
-        print("Total for class " + str(c) + ": " + str(C[c]))
+        #print("Total for class " + str(c) + ": " + str(C[c]))
 
     #find highest value in C[] as prediction
     high = 0
@@ -184,18 +160,6 @@ def learn_dataset(data, classes, n):
     #find probability table for each class
     for c in classes:
         learned_set.append(find_attribute_probability(get_class_data(data, c), n))
-    
-    return learned_set
-
-#creates array of probability tables for each class in dataset
-def learn_dataset_old(dataset_name, class_identities, numValues):
-
-    #3D array - [class][attribute][value]
-    learned_set = []
-
-    #find probability table for each class
-    for identity in class_identities:
-        learned_set.append(find_attribute_probability(get_class_data(dataset_name, identity), numValues))
     
     return learned_set
 
@@ -225,8 +189,20 @@ for i in range(kfold):
 
     learned = learn_dataset(trainingSet,classes,len(trainingSet[0]))
 
+    correct = 0
     for example in testSet:
-        print("Predicted class: {}".format(classes[classify_example(example, learned)]))
+        prediction = classes[classify_example(example, learned)]
+        if(example[len(example)-1] == prediction):
+            correct += 1
+
+    result.append(correct/len(testSet))
+
+#sum all 10 results to get an average acuracy
+add = 0
+for x in range(len(result)):
+    add = add + result[x]
+average = (add/len(result))*100
+print("This algorithm was {0:.2f}% accurate".format(average))
 
 ##BCD_identities = [2,4]
 ##BCD_examples = ["2,1,1,1,2,1,2,1,1,2".split(","),"10,10,10,4,8,1,8,10,1,4".split(","),"1,1,1,1,2,1,3,2,1,2".split(","),"5,1,3,1,2,1,2,1,1,2".split(",")]
