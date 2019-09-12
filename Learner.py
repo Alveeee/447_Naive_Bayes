@@ -42,48 +42,6 @@ def kFoldCross(data, splitRatio, k):
     
     return [trainSet, testSet]
 
-import csv
-import random
-
-#readCsv reads in the preprocessed data
-def readCsv(file):
-    data = csv.reader(open(file, "r"))
-    data_list = list(data)
-    for i in range(len(data_list)):
-        for j in range(len(data_list[i])):
-            data_list[i] = [float(x) for x in data_list[i]]
-    return data_list
-
-#randomize data so that when we select training and test sets, we get a variety of each class
-def randomizeData(data):
-    randomSet = []
-    copy = list(data)
-    while len(randomSet) < len(data):
-        index = random.randrange(len(copy))
-        randomSet.append(copy.pop(index))
-    return randomSet
-
-def getClasses(data):
-    classes = []
-    for i in range(len(data)):
-        if(not(data[i][len(data[i])-1] in classes)):
-           classes.append(data[i][len(data[i])-1])
-    return classes
-
-#kFoldCross is how we split the data into training and test sets using 10 fold cross validation
-def kFoldCross(data, splitRatio, k):
-    #size of test set (for 100 records and a ratio of .9, it would be 10 records)
-    testSize = int(len(data) - len(data) * splitRatio)
-    index = k*testSize
-    
-    trainSet = list(data)
-    testSet = []
-
-    for i in range(testSize):
-        testSet.append(trainSet.pop(index))
-    
-    return [trainSet, testSet]
-
 #returns class-specific dataset(from given dataset) for given class [Q(C = c_i)]
 def get_class_data(data, c):
     #array for storing class-specific dataset
