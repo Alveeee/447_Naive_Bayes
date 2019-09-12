@@ -18,7 +18,7 @@ def readCsv(file):
                 data[i][j] = '3'
             elif(data[i][j] == 'D4'):
                 data[i][j] = '4'
-        data[i] = [float(x) for x in data[i]]
+            data[i][j] = int(data[i][j])
     return data
 
 def writeCsv(file, data):

@@ -55,13 +55,13 @@ def get_class_data(data, c):
     return class_data
 
 #returns the probability of each value of each attribute in a class-uniform dataset [F(A_j = a_k, C = c_i)]
-def find_attribute_probability(class_data, numValues):
+def find_attribute_probability(class_data, val_range):
 
     numAttributes = len(class_data[0])
 
 
     #array for storing the total count of each value, for each attribute, in the dataset **Count starts at 1 to conform to mathematical formula**
-    table = [[1 for x in range(numValues)] for x in range(numAttributes)]
+    table = [[1 for x in range(val_range)] for x in range(numAttributes)]
 
     #iterate through each example
     for c in range(len(class_data)):
@@ -75,7 +75,7 @@ def find_attribute_probability(class_data, numValues):
 
     #divide the number of examples matching each value by the number of examples in the class
     for attribute in table:
-        for i in range(numValues):
+        for i in range(val_range):
             attribute[i] /= numAttributes - 1 + (len(class_data))
 
     #store sample's class size in probability table
@@ -166,8 +166,6 @@ def find_MAE(pred,act):
     MAE = total/size
     print("Mean Absolute Error = :",MAE)
 
-
-#TODO: STILL AN OUT OF BOUND ERROR
 def jumble(file):
     data =  pandas.read_csv(file,header=None)
     size = len(data.columns)
@@ -196,6 +194,7 @@ def driver(file):
     if(not(file.endswith("_jumbled.csv"))):
         jumble(file)
     data = randomizeData(data)
+    range_var = int(max(max(x) for x in data))
     
     splitRatio = .9
     kfold = 10
@@ -209,7 +208,7 @@ def driver(file):
 
         trainingSet, testSet = kFoldCross(data, splitRatio, i)
 
-        learned = learn_dataset(trainingSet,classes,25)
+        learned = learn_dataset(trainingSet,classes,range_var)
 
         correct = 0
         for example in testSet:
@@ -237,7 +236,7 @@ def driver(file):
         add = add + result[x]
     average = (add/len(result))*100
 
-    print("This algorithm was %{0:.2f} accurate on {1}".format(average,file))
+    print("This algorithm was {0:.2f}% accurate on {1}\n".format(average,file))
 
 driver("data/BCD-processed.csv")
 driver("data/BCD-processed_jumbled.csv")
