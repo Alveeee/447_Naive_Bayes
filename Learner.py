@@ -168,7 +168,7 @@ def jumble(file):
     size = len(data.columns)
     #Uniquely sample numbers in the range of the number of columns in our
     #dataframe. Only selects 10% of numbers
-    random_list = random.sample(list(range(size)),int(size/10))
+    random_list = random.sample(list(range(size-1)),int(size/10))
 
     randomized_features = data
     #Gets the columns at the randomly selected spots
@@ -188,9 +188,10 @@ def jumble(file):
 def driver(file):
     #reading in data from file
     data = readCsv(file)
-    jumble(file)
+    if(not(file.endswith("_jumbled.csv"))):
+        jumble(file)
     data = randomizeData(data)
-
+    
     splitRatio = .9
     kfold = 10
     result = []
