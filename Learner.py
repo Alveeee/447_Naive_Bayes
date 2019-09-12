@@ -186,6 +186,11 @@ def find_MSE(pred,act):
     MSE = total/size
     print("Mean Square Error = :",MSE)
 
+def findError(true, false):
+    error = (false)/(true+false)
+    print("Error is: ",error)
+        
+
 #Second loss function MAE is the same as MSE except it has absolute values
 #and no squaring of the diffence between the estimated values and the actual
 #values
@@ -233,6 +238,8 @@ def driver(file):
     result = []
     y = []
     y_bar = []
+    y_FP_FN = 0
+    y_TP_TN = 0
     for i in range(kfold):
         classes = getClasses(data)
         
@@ -247,13 +254,18 @@ def driver(file):
             y_bar.append(example[len(example)-1])
             if(example[len(example)-1] == prediction):
                 correct += 1
-
+                y_TP_TN += 1
+            else:
+                y_FP_FN += 1
+                  
         result.append(correct/len(testSet))
 
     #Find Mean Square Error
     find_MSE(y,y_bar)
     #Find Mean Absolute Error
     find_MAE(y,y_bar)
+    #Find confusion table based error
+    findError(y_TP_TN,y_FP_FN)
     
     #sum all 10 results to get an average acuracy
     add = 0
