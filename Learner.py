@@ -171,7 +171,11 @@ def jumble(file):
     size = len(data.columns)
     #Uniquely sample numbers in the range of the number of columns in our
     #dataframe. Only selects 10% of numbers
-    random_list = random.sample(list(range(size-1)),int(size/10))
+    sample_size = int(size/10)
+    if(sample_size < 1):
+        #Select at least one column even if it's not 10% of the features
+        sample_size = 1
+    random_list = random.sample(list(range(size-1)),sample_size)
 
     randomized_features = data
     #Gets the columns at the randomly selected spots
