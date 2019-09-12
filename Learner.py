@@ -204,7 +204,7 @@ def driver(file):
 
         trainingSet, testSet = kFoldCross(data, splitRatio, i)
 
-        learned = learn_dataset(trainingSet,classes,25))
+        learned = learn_dataset(trainingSet,classes,25)
 
         correct = 0
         for example in testSet:
