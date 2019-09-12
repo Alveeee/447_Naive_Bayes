@@ -91,16 +91,20 @@ def classify_example(example, learned_set):
     sample_size = 0
     #iterate over each class' probability table
     for c in range(len(learned_set)):
-        C.append(0)
+        C.append(1)
         sample_size += len(learned_set[c])
 
         #iterate over each attribute in example
         for a in range(len(example)-1):
 
-            #add the probability from example's attribute value
+            #multiply the probability from example's attribute value
             x = int(example[a])-1
             if(len(learned_set[c][a]) > x):
-                C[c] += learned_set[c][a][x]
+                C[c] *= learned_set[c][a][x]
+                
+    #multiply each probability by its class' probability
+    for c in range(len(learned_set)):
+        C[c] *= learned_set[c][-1][0]/sample_size
 
     #find highest value in C[] as prediction
     high = 0
