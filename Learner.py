@@ -33,20 +33,20 @@ def kFoldCross(data, splitRatio, k):
     #size of test set (for 100 records and a ratio of .9, it would be 10 records)
     testSize = int(len(data) - len(data) * splitRatio)
     index = k*testSize
-    
+
     trainSet = list(data)
     testSet = []
 
     for i in range(testSize):
         testSet.append(trainSet.pop(index))
-    
+
     return [trainSet, testSet]
 
 #returns class-specific dataset(from given dataset) for given class [Q(C = c_i)]
 def get_class_data(data, c):
     #array for storing class-specific dataset
     class_data = []
-    
+
     #read data
     for line in data:
         #if the class matches the requested identity, add to class-specific dataset
@@ -58,7 +58,8 @@ def get_class_data(data, c):
 def find_attribute_probability(class_data, numValues):
 
     numAttributes = len(class_data[0])
-    
+
+
     #array for storing the total count of each value, for each attribute, in the dataset **Count starts at 1 to conform to mathematical formula**
     table = [[1 for x in range(numValues)] for x in range(numAttributes)]
 
@@ -92,7 +93,7 @@ def classify_example(example, learned_set):
     for c in range(len(learned_set)):
         C.append(0)
         sample_size += len(learned_set[c])
-        
+
         #iterate over each attribute in example
         for a in range(len(example)-1):
 
@@ -120,7 +121,7 @@ def learn_dataset(data, classes, n):
     #find probability table for each class
     for c in classes:
         learned_set.append(find_attribute_probability(get_class_data(data, c), n))
-    
+
     return learned_set
 
 #prints out the probability table for given class, useful for debugging
@@ -147,7 +148,7 @@ def find_MSE(pred,act):
 def findError(true, false):
     error = (false)/(true+false)
     print("Error is: ",error)
-        
+
 
 #Second loss function MAE is the same as MSE except it has absolute values
 #and no squaring of the diffence between the estimated values and the actual
@@ -201,10 +202,10 @@ def driver(file):
     y_TP_TN = 0
     for i in range(kfold):
         classes = getClasses(data)
-        
+
         trainingSet, testSet = kFoldCross(data, splitRatio, i)
 
-        learned = learn_dataset(trainingSet,classes,len(trainingSet[0]))
+        learned = learn_dataset(trainingSet,classes,25))
 
         correct = 0
         for example in testSet:
@@ -216,7 +217,7 @@ def driver(file):
                 y_TP_TN += 1
             else:
                 y_FP_FN += 1
-                  
+
         result.append(correct/len(testSet))
 
     #Find Mean Square Error
@@ -225,7 +226,7 @@ def driver(file):
     find_MAE(y,y_bar)
     #Find confusion table based error
     findError(y_TP_TN,y_FP_FN)
-    
+
     #sum all 10 results to get an average acuracy
     add = 0
     for x in range(len(result)):
@@ -251,7 +252,7 @@ driver("data/glass-processed_jumbled.csv")
 ##BCD_learned = learn_dataset("BCD-processed.txt",BCD_identities, 10)
 ##
 ##Vote_identities = [0,1]
-##Vote_examples = ["0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,1".split(","),"0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,1".split(","),"1,0,1,0,0,0,1,1,1,1,0,0,0,0,1,0".split(","),"1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,0".split(",")] 
+##Vote_examples = ["0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,1".split(","),"0,1,0,1,1,1,0,0,0,1,0,1,1,1,0,1".split(","),"1,0,1,0,0,0,1,1,1,1,0,0,0,0,1,0".split(","),"1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,0".split(",")]
 ##Vote_learned = learn_dataset("house-votes_processed.csv",Vote_identities, 2)
 ##
 ##Soybean_identities = [1,2,3,4]
@@ -260,10 +261,9 @@ driver("data/glass-processed_jumbled.csv")
 ##
 ##for example in Soybean_examples:
 ##    print("Soybean Predicted class: " + str(classify_example(example, Soybean_learned)))
-##    
+##
 ##for example in Vote_examples:
 ##    print("Vote Predicted class: " + str(classify_example(example, Vote_learned)))
-##    
+##
 ##for example in BCD_examples:
 ##    print("BCD Predicted class: " + str(BCD_identities[classify_example(example, BCD_learned)]))
-
